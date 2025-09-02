@@ -13,6 +13,9 @@ dependencies = [
     "uvicorn[standard] (>=0.35.0,<0.36.0)"
 ]
 
+[tool.poetry.scripts]
+# Convenience script to start in debug (reload + debug logs)
+dev = "uvicorn.main:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
