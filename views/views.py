@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Body, HTTPException
 
+from models.models import User
 from models.temp_db import DataBaseManager
 
 
@@ -22,7 +23,7 @@ class ViewsManager:
         @self.app.get("/id/{user_id}")
         async def get_user(user_id: int):
             for user in self.db.users_db:
-                if user["id"] == user_id:
+                if user.id == user_id:
                     return user
             raise HTTPException(status_code=404, detail="User not found with path parameter")
 
@@ -32,16 +33,16 @@ class ViewsManager:
         # {"name": "Alice3", "age": 30, "city": "New York", "email": "alice@example.com"}
         # {"name": "Alice4", "age": 30, "city": "New York", "email": "alice@example.com"}
         @self.app.post("/create")
-        async def create_user(new_item=Body()):
+        async def create_user(new_item: User):
             latest_id: int = len(self.db.users_db)
 
-            new_user = {
-                "id": latest_id + 1,
-                "name": new_item.get("name"),
-                "age": new_item.get("age"),
-                "city": new_item.get("city"),
-                "email": new_item.get("email")
-            }
+            new_user = User(
+                id=latest_id + 1,
+                name=new_item.name,
+                age=new_item.age,
+                city=new_item.city,
+                email=new_item.email
+            )
 
             self.db.users_db.append(new_user)
             return new_user
@@ -51,22 +52,25 @@ class ViewsManager:
         # request body (application/json)
         # {"name": "Alice2", "age": 30, "city": "New York", "email": "alice@example.com"}
         @self.app.put("/edit/{user_id}")
-        async def edit_user(user_id: int, updated_item=Body()):
+        async def edit_user(user_id: int, updated_item: User):
             for user in self.db.users_db:
-                if user["id"] == user_id:
-                    user["name"] = updated_item.get("name", user["name"])
-                    user["age"] = updated_item.get("age", user["age"])
-                    user["city"] = updated_item.get("city", user["city"])
-                    user["email"] = updated_item.get("email", user["email"])
+                if user.id == user_id:
+                    user.name = updated_item.name
+                    user.age = updated_item.age
+                    user.city = updated_item.city
+                    user.email = updated_item.email
                     return user
+
             raise HTTPException(status_code=404, detail="User not found with path parameter")
+
 
         # DELETE
         # http://127.0.0.1:8000/delete/3
         @self.app.delete("/delete/{user_id}")
         async def delete_user(user_id: int):
-            for index, user in enumerate(self.db.users_db):
-                if user["id"] == user_id:
-                    del self.db.users_db[index]
-                    return {"detail": "User deleted"}
+            for user in self.db.users_db:
+                if user.id == user_id:
+                    self.db.users_db.remove(user)
+                    return {"detail": "User deleted successfully"}
+
             raise HTTPException(status_code=404, detail="User not found with path parameter")
