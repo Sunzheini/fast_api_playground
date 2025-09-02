@@ -18,7 +18,7 @@ class ViewsManager:
         async def list_users():
             return self.db.users_db
 
-        # GET one
+        # GET one with path parameter
         # http://127.0.0.1:8000/id/2
         @self.app.get("/id/{user_id}")
         async def get_user(user_id: int):
@@ -26,6 +26,15 @@ class ViewsManager:
                 if user.id == user_id:
                     return user
             raise HTTPException(status_code=404, detail="User not found with path parameter")
+
+        # GET one with query parameter
+        # http://127.0.0.1:8000/list/city?city=Boston
+        @self.app.get("/list/")
+        async def get_users_by_city(city: str):
+            users_in_city = [user for user in self.db.users_db if user.city.lower() == city.lower()]
+            if not users_in_city:
+                raise HTTPException(status_code=404, detail="No users found in the specified city")
+            return users_in_city
 
         # POST
         # http://127.0.0.1:8000/create
