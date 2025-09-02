@@ -5,6 +5,3 @@ class DataBaseManager:
             {"id": 2, "name": "Bob", "age": 25, "city": "Boston", "email": "bob@example.com"},
             {"id": 3, "name": "Charlie", "age": 35, "city": "Chicago", "email": "charlie@example.com"}
         ]
-
-        # Counter for auto-incrementing IDs
-        self.next_id = 4

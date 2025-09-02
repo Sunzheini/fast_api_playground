@@ -6,5 +6,3 @@ from views.views import ViewsManager
 app = FastAPI()                     # create a FastAPI instance
 db_manager = DataBaseManager()      # the "database"
 views_manager = ViewsManager(app, db_manager)   # the views
-
-
