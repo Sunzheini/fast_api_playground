@@ -7,7 +7,7 @@ class User(BaseModel):
     name: str = Field(min_length=1, max_length=100, description="User's full name")
     age: int = Field(ge=0, le=120, description="User's age between 0 and 120")
     city: str = Field(min_length=1, max_length=100, description="City name")
-    email: Optional[EmailStr] = Field(default=None, description="Valid email address if provided")
+    email: Optional[str] = Field(default=None, description="Valid email address if provided")
 
     # Example data for documentation on swagger UI
     model_config = {
