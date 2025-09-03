@@ -7,4 +7,4 @@ from views.views import ViewsManager
 router = APIRouter()
 
 db_manager = DataBaseManager()                  # the "database"
-views_manager = ViewsManager(router, db_manager)   # the views
+views_manager = ViewsManager(router)   # the views

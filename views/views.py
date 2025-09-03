@@ -6,9 +6,9 @@ from models.temp_db import DataBaseManager
 
 
 class ViewsManager:
-    def __init__(self, router: APIRouter, db: DataBaseManager):
+    def __init__(self, router: APIRouter):
         self.router = router
-        self.db = db
+        self.db = DataBaseManager
 
         self.register_views()
 
