@@ -3,10 +3,12 @@ from typing import Dict, Any, Optional
 import os
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
 
 from models.temp_db import DataBaseManager
+
+# ToDo: continue from implementing last reply in DeepSeek
 
 router = APIRouter()
 
@@ -78,7 +80,7 @@ def create_access_token(username: str, expires_delta: Optional[timedelta] = None
 @router.get("/verify-token")
 async def verify_token(token: str):
     """
-    Verify if a JWT token is valid
+    Verify if a JWT token is valid, e.g. eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9, which is received by login
     """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
