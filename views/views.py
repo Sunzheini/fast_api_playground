@@ -3,12 +3,12 @@ from starlette import status as H
 
 from models.models import User
 from models.temp_db import DataBaseManager
-from routers.auth import get_current_user
 
 
 class ViewsManager:
-    def __init__(self, router: APIRouter):
+    def __init__(self, router: APIRouter, get_current_user):
         self.router = router
+        self.get_current_user = get_current_user
         self.db = DataBaseManager
 
         self.register_views()
@@ -17,7 +17,10 @@ class ViewsManager:
         #GET list
         # http://127.0.0.1:8000/list
         @self.router.get("/list", status_code=H.HTTP_200_OK)   # status code if successful
-        async def list_users(current_user = Depends(get_current_user)):     # only authenticated users can see the list
+        async def list_users(current_user = Depends(self.get_current_user)):     # only authenticated users can see the list
+            if current_user is None:
+                raise HTTPException(status_code=401, detail="Not authenticated")
+
             return self.db.users_db
 
         # GET one with path parameter
