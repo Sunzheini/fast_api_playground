@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, Path, Query
+from fastapi import APIRouter, HTTPException, Path, Query, Depends
 from starlette import status as H
 
 from models.models import User
 from models.temp_db import DataBaseManager
+from routers.auth import get_current_user
 
 
 class ViewsManager:
@@ -16,7 +17,7 @@ class ViewsManager:
         #GET list
         # http://127.0.0.1:8000/list
         @self.router.get("/list", status_code=H.HTTP_200_OK)   # status code if successful
-        async def list_users():
+        async def list_users(current_user = Depends(get_current_user)):     # only authenticated users can see the list
             return self.db.users_db
 
         # GET one with path parameter
