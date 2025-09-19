@@ -121,3 +121,4 @@ def test_delete_user(client):
 
 
 # run with `pytest` in th terminal
+# run with `pytest -s` to see print statements
