@@ -9,6 +9,21 @@ from jose import jwt, JWTError
 from models.temp_db import DataBaseManager
 
 
+"""
+THe flow is as follows:
+1. User sends a POST request to /auth/login with username and password.
+2. The server verifies the credentials and, if valid, generates a JWT token.
+3. The server responds with the JWT token.
+4. For protected routes, the client (frontend) includes the JWT token in the 
+Authorization header of subsequent requests in the format "Bearer <token>
+".
+5. When a request is made to a protected route, the server extracts the token
+from the Authorization header and verifies it (uses the get_current_user dependency).
+6. If the token is valid, the server processes the request; otherwise, it
+responds with an appropriate error (e.g., 401 Unauthorized).
+"""
+
+
 router = APIRouter(
     prefix='/auth',
     tags=['auth'],
@@ -48,7 +63,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 
 @router.post("/login")
-async def authenticate_user(form_data: OAuth2PasswordRequestForm = Depends()):
+async def authenticate_user_and_return_token(form_data: OAuth2PasswordRequestForm = Depends()):
     """
     Authenticate user and return JWT token
 
@@ -106,6 +121,7 @@ def create_access_token(username: str, expires_delta: Optional[timedelta] = None
     return encoded_jwt
 
 
+# not used currently, but could be useful for debugging
 @router.get("/verify-token")
 async def verify_token(token: str):
     """
